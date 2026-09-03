@@ -383,10 +383,7 @@
                 <h2 class="section-title">Membership<br><em>Classes</em></h2>
                 <p>Membership is open to all students interested in Food Science and Technology. No applicant may be denied membership on the basis of race, colour, gender, sexual orientation, age, religion, or national origin.</p>
                 <p>Members are expected to uphold club regulations, wear club uniforms at events, and actively support the club's objectives and activities.</p>
-                <div class="membership-cta">
-                    <p>Ready to be part of the FST Club? Contact us to apply for membership.</p>
-                    <a href="#contact" class="btn-primary">Apply Now</a>
-                </div>
+                
             </div>
             <div class="membership-cards fade-in" style="transition-delay:0.2s;">
                 <div class="mem-card">
@@ -441,17 +438,30 @@
     <section id="gallery">
         <div class="gallery-header fade-in">
             <div class="section-label" style="color:rgba(200,168,75,0.8);">Moments</div>
-            <h2 class="section-title">Club <em>Gallery</em></h2>
-        </div>
-        <div class="gallery-mosaic fade-in" style="transition-delay:0.2s;">
-            <div class="gallery-item"><img src="FB_IMG_1778154839719.jpg" alt="Community outreach"><div class="gallery-overlay"><i class="fas fa-expand"></i></div></div>
-            <div class="gallery-item"><img src="FB_IMG_1778154913580.jpg" alt="Audience at value chain fair"><div class="gallery-overlay"><i class="fas fa-expand"></i></div></div>
-            <div class="gallery-item"><img src="IMG-20260425-WA0137.jpg" alt="Group photo at value chain fair"><div class="gallery-overlay"><i class="fas fa-expand"></i></div></div>
-            <div class="gallery-item"><img src="FB_IMG_1777967682012.jpg" alt="Panelists at value chain fair"><div class="gallery-overlay"><i class="fas fa-expand"></i></div></div>
-            <div class="gallery-item"><img src="FB_IMG_1778157003075.jpg" alt="Stall exhibition at second Agro-processing and value chain fair"><div class="gallery-overlay"><i class="fas fa-expand"></i></div></div>
-        </div>
-    </section>
+<section id="gallery">
+    <div class="gallery-header fade-in">
+        <div class="section-label" style="color:rgba(200,168,75,0.8);">Moments</div>
+        <h2 class="section-title">Club <em>Gallery</em></h2>
+    </div>
 
+    <!-- Slideshow -->
+    <div id="slideshow" style="position:relative;width:100%;height:480px;overflow:hidden;background:var(--navy-mid);">
+        <div id="slides" style="display:flex;height:100%;transition:transform 0.6s ease;">
+            <div style="min-width:100%;height:100%;"><img src="FB_IMG_1778154839719.jpg" style="width:100%;height:100%;object-fit:cover;" alt="Community outreach"></div>
+            <div style="min-width:100%;height:100%;"><img src="FB_IMG_1778154913580.jpg" style="width:100%;height:100%;object-fit:cover;" alt="Audience at value chain fair"></div>
+            <div style="min-width:100%;height:100%;"><img src="IMG-20260425-WA0137.jpg" style="width:100%;height:100%;object-fit:cover;" alt="Group photo"></div>
+            <div style="min-width:100%;height:100%;"><img src="FB_IMG_1777967682012.jpg" style="width:100%;height:100%;object-fit:cover;" alt="Panelists"></div>
+            <div style="min-width:100%;height:100%;"><img src="FB_IMG_1778157003075.jpg" style="width:100%;height:100%;object-fit:cover;" alt="Stall exhibition"></div>
+        </div>
+
+        <!-- Prev / Next arrows -->
+        <button onclick="moveSlide(-1)" style="position:absolute;top:50%;left:16px;transform:translateY(-50%);background:rgba(10,22,40,0.6);border:none;color:var(--accent);font-size:1.4rem;width:44px;height:44px;border-radius:50%;cursor:pointer;z-index:10;">&#8592;</button>
+        <button onclick="moveSlide(1)"  style="position:absolute;top:50%;right:16px;transform:translateY(-50%);background:rgba(10,22,40,0.6);border:none;color:var(--accent);font-size:1.4rem;width:44px;height:44px;border-radius:50%;cursor:pointer;z-index:10;">&#8594;</button>
+
+        <!-- Dot indicators -->
+        <div id="dots" style="position:absolute;bottom:16px;left:50%;transform:translateX(-50%);display:flex;gap:8px;"></div>
+    </div>
+</section>
     <!-- CONTACT -->
     <section id="contact">
         <div class="contact-layout">
@@ -618,6 +628,34 @@
             entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } });
         }, { threshold: 0.1 });
         faders.forEach(el => observer.observe(el));
+
+// ── GALLERY SLIDESHOW ──
+let currentSlide = 0;
+const slides = document.getElementById('slides');
+const totalSlides = slides.children.length;
+const dotsContainer = document.getElementById('dots');
+
+// Build dots
+for (let i = 0; i < totalSlides; i++) {
+    const dot = document.createElement('div');
+    dot.style.cssText = `width:8px;height:8px;border-radius:50%;background:${i===0?'var(--accent)':'rgba(255,255,255,0.4)'};cursor:pointer;transition:background 0.3s;`;
+    dot.addEventListener('click', () => goToSlide(i));
+    dotsContainer.appendChild(dot);
+}
+
+function goToSlide(n) {
+    currentSlide = (n + totalSlides) % totalSlides;
+    slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+    document.querySelectorAll('#dots div').forEach((d, i) => {
+        d.style.background = i === currentSlide ? 'var(--accent)' : 'rgba(255,255,255,0.4)';
+    });
+}
+
+function moveSlide(dir) { goToSlide(currentSlide + dir); }
+
+// Auto-cycle every 4 seconds
+setInterval(() => moveSlide(1), 4000);
     </script>
+        
 </body>
 </html>
